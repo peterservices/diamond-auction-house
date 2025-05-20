@@ -70,23 +70,23 @@ public class AuctionHouseCommand {
     private static int auctionCommand(CommandContext<CommandSourceStack> ctx, int price) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         if (player.getMainHandItem().isEmpty()) {
-            ctx.getSource().sendSuccess(Component.literal("You must be holding an item"), true);
+            ctx.getSource().sendSuccess(() -> Component.literal("You must be holding an item"), true);
             return 0;
         }
         AuctionHouseDatabaseManager dm = DiamondsAuctionHouse.getDatabaseManager();
         String playerUuid = player.getStringUUID();
         if ((dm.playerItemCount(playerUuid, "auctionhouse") + dm.playerItemCount(playerUuid, "expireditems")) >= DiamondsAuctionHouseConfig.getPlayerMaxItems(player)) {
-            ctx.getSource().sendSuccess(Component.literal("You have too many items on auction"), true);
+            ctx.getSource().sendSuccess(() -> Component.literal("You have too many items on auction"), true);
             return 0;
         }
         if (DiamondsAuctionHouse.ah.canAddItem()) {
             CompoundTag tag = player.getMainHandItem().getOrCreateTag();
             DiamondsAuctionHouse.ah.addItem(new AuctionItem(DiamondsAuctionHouse.getDatabaseManager().addItemToAuction(playerUuid, player.getName().getString(), tag.getAsString(), String.valueOf(BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem())), player.getMainHandItem().getCount(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds), playerUuid, player.getName().getString(), player.getMainHandItem(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds));
             player.getInventory().removeItem(player.getMainHandItem());
-            ctx.getSource().sendSuccess(Component.literal("Item successfully added to auction house for $" + price), true);
+            ctx.getSource().sendSuccess(() -> Component.literal("Item successfully added to auction house for $" + price), true);
             return 0;
         }
-        ctx.getSource().sendSuccess(Component.literal("The auction house is full"), true);
+        ctx.getSource().sendSuccess(() -> Component.literal("The auction house is full"), true);
         return 0;
     }
 }
