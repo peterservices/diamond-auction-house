@@ -109,7 +109,6 @@ public class ExpiredItemsGui extends SimpleGui {
             case 4 -> DisplayElement.of(
                     new GuiElementBuilder(Items.BARRIER)
                             .setName(Component.translatable("spectatorMenu.close").withStyle(ChatFormatting.RED))
-                            .hideFlags()
                             .setCallback((x, y, z) -> {
                                 playClickSound(this.player);
                                 this.close();
@@ -167,7 +166,6 @@ public class ExpiredItemsGui extends SimpleGui {
         private static final DisplayElement FILLER = DisplayElement.of(
                 new GuiElementBuilder(Items.LIGHT_GRAY_STAINED_GLASS_PANE)
                         .setName(Component.literal(""))
-                        .hideFlags()
         );
 
         public static DisplayElement of(GuiElementInterface element) {
@@ -183,7 +181,6 @@ public class ExpiredItemsGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.next_page").withStyle(ChatFormatting.WHITE))
-                                .hideFlags()
                                 .setSkullOwner(GuiTextures.GUI_NEXT_PAGE)
                                 .setCallback((x, y, z) -> {
                                     playClickSound(gui.player);
@@ -193,7 +190,6 @@ public class ExpiredItemsGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.next_page").withStyle(ChatFormatting.DARK_GRAY))
-                                .hideFlags()
                                 .setSkullOwner(GuiTextures.GUI_NEXT_PAGE_BLOCKED));
             }
         }
@@ -203,7 +199,6 @@ public class ExpiredItemsGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.previous_page").withStyle(ChatFormatting.WHITE))
-                                .hideFlags()
                                 .setSkullOwner(GuiTextures.GUI_PREVIOUS_PAGE)
                                 .setCallback((x, y, z) -> {
                                     playClickSound(gui.player);
@@ -213,7 +208,6 @@ public class ExpiredItemsGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.previous_page").withStyle(ChatFormatting.DARK_GRAY))
-                                .hideFlags()
                                 .setSkullOwner(GuiTextures.GUI_PREVIOUS_PAGE_BLOCKED));
             }
         }

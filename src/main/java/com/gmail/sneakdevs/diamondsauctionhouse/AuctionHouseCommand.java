@@ -19,7 +19,7 @@ import net.minecraft.server.level.ServerPlayer;
 public class AuctionHouseCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         if (!DiamondsAuctionHouseConfig.getInstance().useBaseCommand || DiamondEconomyConfig.getInstance().commandName == null) {
-            if (DiamondsAuctionHouseConfig.getInstance().auctionCommandName != null) {
+            if (DiamondsAuctionHouseConfig.getInstance().auctionHouseCommandName != null) {
                 dispatcher.register(Commands.literal(DiamondsAuctionHouseConfig.getInstance().auctionHouseCommandName).executes(AuctionHouseCommand::auctionhouseCommand));
             }
             if (DiamondsAuctionHouseConfig.getInstance().auctionCommandName != null) {
@@ -80,8 +80,8 @@ public class AuctionHouseCommand {
             return 0;
         }
         if (DiamondsAuctionHouse.ah.canAddItem()) {
-            CompoundTag tag = player.getMainHandItem().getOrCreateTag();
-            DiamondsAuctionHouse.ah.addItem(new AuctionItem(DiamondsAuctionHouse.getDatabaseManager().addItemToAuction(playerUuid, player.getName().getString(), tag.getAsString(), String.valueOf(BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem())), player.getMainHandItem().getCount(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds), playerUuid, player.getName().getString(), player.getMainHandItem(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds));
+            CompoundTag tag = new CompoundTag();
+            DiamondsAuctionHouse.ah.addItem(new AuctionItem(DiamondsAuctionHouse.getDatabaseManager().addItemToAuction(playerUuid, player.getName().getString(), tag.toString(), String.valueOf(BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem())), player.getMainHandItem().getCount(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds), playerUuid, player.getName().getString(), player.getMainHandItem(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds));
             player.getInventory().removeItem(player.getMainHandItem());
             ctx.getSource().sendSuccess(() -> Component.literal("Item successfully added to auction house for $" + price), true);
             return 0;

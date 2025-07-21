@@ -27,6 +27,7 @@ package com.gmail.sneakdevs.diamondsauctionhouse.gui;
 import com.gmail.sneakdevs.diamondsauctionhouse.DiamondsAuctionHouse;
 import com.gmail.sneakdevs.diamondsauctionhouse.auction.AuctionItem;
 import com.gmail.sneakdevs.diamondsauctionhouse.config.DiamondsAuctionHouseConfig;
+
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementBuilderInterface;
@@ -34,6 +35,8 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -42,6 +45,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
+
 import org.jetbrains.annotations.Nullable;
 
 public class AuctionHouseGui extends SimpleGui {
@@ -73,12 +78,13 @@ public class AuctionHouseGui extends SimpleGui {
 
     public void updateDisplay() {
         for (int i = 0; i < PAGE_SIZE; i++) {
+            
             var element = this.getElement(i);
-
+            
             if (element == null) {
                 element = DisplayElement.empty();
             }
-
+            
             if (element.element() != null) {
                 this.setSlot(i, element.element());
             } else if (element.slot() != null) {
@@ -87,12 +93,13 @@ public class AuctionHouseGui extends SimpleGui {
         }
 
         for (int i = 0; i < 9; i++) {
+            
             var navElement = this.getNavElement(i);
-
+            
             if (navElement == null) {
                 navElement = DisplayElement.EMPTY;
             }
-
+            
             if (navElement.element != null) {
                 this.setSlot(i + PAGE_SIZE, navElement.element);
             } else if (navElement.slot != null) {
@@ -102,13 +109,13 @@ public class AuctionHouseGui extends SimpleGui {
     }
 
     protected DisplayElement getNavElement(int id) {
+        System.out.println(id);
         return switch (id) {
             case 0 -> skull();
             case 3 -> DisplayElement.previousPage(this);
             case 4 -> DisplayElement.of(
                     new GuiElementBuilder(Items.BARRIER)
                             .setName(Component.translatable("spectatorMenu.close").withStyle(ChatFormatting.RED))
-                            .hideFlags()
                             .setCallback((x, y, z) -> {
                                 playClickSound(this.player);
                                 this.close();
@@ -118,7 +125,6 @@ public class AuctionHouseGui extends SimpleGui {
             case 8 -> DisplayElement.of(
                     new GuiElementBuilder(Items.HOPPER)
                             .setName(Component.literal("Expired Items").withStyle(ChatFormatting.RED))
-                            .hideFlags()
                             .setCallback((x, y, z) -> {
                                 playClickSound(this.player);
                                 this.openExpiredGui();
@@ -186,10 +192,12 @@ public class AuctionHouseGui extends SimpleGui {
 
     private DisplayElement skull() {
         ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
-        stack.getOrCreateTag().putString("SkullOwner",  player.getName().getString());
+        CompoundTag nbt = new CompoundTag();
+        nbt.putString("SkullOwner", player.getName().getString());
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
+        
         return DisplayElement.of(GuiElementBuilder.from(stack)
                 .setName(Component.literal("My Items").withStyle(ChatFormatting.BLUE))
-                .hideFlags()
                 .setCallback((x, y, z) -> {
                     playClickSound(this.player);
                     openPersonal();
@@ -206,7 +214,6 @@ public class AuctionHouseGui extends SimpleGui {
         private static final DisplayElement FILLER = DisplayElement.of(
                 new GuiElementBuilder(Items.LIGHT_GRAY_STAINED_GLASS_PANE)
                         .setName(Component.literal(""))
-                        .hideFlags()
         );
 
         public static DisplayElement of(GuiElementInterface element) {
@@ -222,7 +229,6 @@ public class AuctionHouseGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.next_page").withStyle(ChatFormatting.WHITE))
-                                .hideFlags()
                                 .setSkullOwner(GuiTextures.GUI_NEXT_PAGE)
                                 .setCallback((x, y, z) -> {
                                     playClickSound(gui.player);
@@ -232,7 +238,6 @@ public class AuctionHouseGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.next_page").withStyle(ChatFormatting.DARK_GRAY))
-                                .hideFlags()
                                 .setSkullOwner(GuiTextures.GUI_NEXT_PAGE_BLOCKED));
             }
         }
@@ -242,7 +247,6 @@ public class AuctionHouseGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.previous_page").withStyle(ChatFormatting.WHITE))
-                                .hideFlags()
                                 .setSkullOwner(GuiTextures.GUI_PREVIOUS_PAGE)
                                 .setCallback((x, y, z) -> {
                                     playClickSound(gui.player);
@@ -252,7 +256,6 @@ public class AuctionHouseGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.previous_page").withStyle(ChatFormatting.DARK_GRAY))
-                                .hideFlags()
                                 .setSkullOwner(GuiTextures.GUI_PREVIOUS_PAGE_BLOCKED));
             }
         }

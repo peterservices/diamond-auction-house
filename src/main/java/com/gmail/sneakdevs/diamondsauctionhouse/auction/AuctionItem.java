@@ -1,12 +1,15 @@
 package com.gmail.sneakdevs.diamondsauctionhouse.auction;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 
 
 public class AuctionItem {
@@ -23,7 +26,7 @@ public class AuctionItem {
         this.itemStack = stack;
         this.uuid = playerUuid;
         this.owner = owner;
-        this.tag = itemStack.getOrCreateTag().getAsString();
+        this.tag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, "").toString();
         this.price = price;
         this.secondsLeft = secondsLeft;
     }
@@ -32,10 +35,10 @@ public class AuctionItem {
         ItemStack itemStack1;
         this.id = id;
         try {
-            itemStack1 = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(item)), count);
+            itemStack1 = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(item)).get().value(), count);
             CompoundTag nbt = NbtUtils.snbtToStructure(tag);
             nbt.remove("palette");
-            itemStack1.setTag(nbt);
+            itemStack1.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
             itemStack1 = new ItemStack(Items.AIR);
