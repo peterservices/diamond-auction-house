@@ -36,7 +36,6 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -45,7 +44,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.ResolvableProfile;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -192,9 +191,7 @@ public class AuctionHouseGui extends SimpleGui {
 
     private DisplayElement skull() {
         ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
-        CompoundTag nbt = new CompoundTag();
-        nbt.putString("SkullOwner", player.getName().getString());
-        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
+        stack.set(DataComponents.PROFILE, new ResolvableProfile(player.getGameProfile()));
         
         return DisplayElement.of(GuiElementBuilder.from(stack)
                 .setName(Component.literal("My Items").withStyle(ChatFormatting.BLUE))

@@ -3,6 +3,7 @@ package com.gmail.sneakdevs.diamondsauctionhouse.gui;
 import com.gmail.sneakdevs.diamondeconomy.DiamondUtils;
 import com.gmail.sneakdevs.diamondsauctionhouse.DiamondsAuctionHouse;
 import com.gmail.sneakdevs.diamondsauctionhouse.auction.AuctionItem;
+import com.mojang.authlib.GameProfile;
 
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
@@ -11,8 +12,8 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -20,17 +21,21 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.ResolvableProfile;
+
+import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
 public class AuctionItemGui extends SimpleGui {
     private int ticker = 0;
     private final AuctionItem item;
+    private final MinecraftServer server;
 
     public AuctionItemGui(ServerPlayer player, AuctionItem item) {
         super(MenuType.GENERIC_9x1, player, false);
         this.item = item;
+        this.server = player.getServer();
     }
 
     public void updateDisplay() {
@@ -123,9 +128,7 @@ public class AuctionItemGui extends SimpleGui {
 
     private DisplayElement skull() {
         ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
-        CompoundTag nbt = new CompoundTag();
-        nbt.putString("SkullOwner",  item.getOwner());
-        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
+        stack.set(DataComponents.PROFILE, new ResolvableProfile(server.getProfileCache().get(UUID.fromString(item.getUuid())).orElse(new GameProfile(UUID.fromString(item.getUuid()), item.getOwner()))));
         return DisplayElement.of(GuiElementBuilder.from(stack)
                 .setName(Component.literal("Owner: " + item.getOwner()).withStyle(ChatFormatting.BLUE)));
     }
