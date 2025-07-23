@@ -1,15 +1,16 @@
 package com.gmail.sneakdevs.diamondsauctionhouse.auction;
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.mojang.serialization.JsonOps;
 
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.CustomData;
 
 
 public class AuctionItem {
@@ -21,27 +22,27 @@ public class AuctionItem {
     private final int id;
     private int secondsLeft;
 
-    public AuctionItem(int id, String playerUuid, String owner, ItemStack stack, int price, int secondsLeft) {
+    public AuctionItem(MinecraftServer server, int id, String playerUuid, String owner, ItemStack stack, int price, int secondsLeft) {
         this.id = id;
         this.itemStack = stack;
         this.uuid = playerUuid;
         this.owner = owner;
-        this.tag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, "").toString();
+        DataComponentMap components = itemStack.getComponents();
+        RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess());
+        this.tag = DataComponentMap.CODEC.encodeStart(registryOps, components).getOrThrow().toString();
         this.price = price;
         this.secondsLeft = secondsLeft;
     }
 
-    public AuctionItem(int id, String playerUuid, String owner, String tag, String item, int count, int price, int secondsLeft) {
+    public AuctionItem(MinecraftServer server, int id, String playerUuid, String owner, String tag, String item, int count, int price, int secondsLeft) {
         ItemStack itemStack1;
         this.id = id;
-        try {
-            itemStack1 = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(item)).get().value(), count);
-            CompoundTag nbt = NbtUtils.snbtToStructure(tag);
-            nbt.remove("palette");
-            itemStack1.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
-        } catch (CommandSyntaxException e) {
-            e.printStackTrace();
-            itemStack1 = new ItemStack(Items.AIR);
+        itemStack1 = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(item)).get().value(), count);
+        RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess());
+        DataComponentMap components = DataComponentMap.CODEC.parse(registryOps, JsonParser.parseString(tag)).result().orElse(DataComponentMap.EMPTY);
+        for (DataComponentType<?> type : components.keySet()) {
+            Object value = components.get(type);
+            itemStack1.set((DataComponentType<Object>) type, value);
         }
         this.itemStack = itemStack1;
         this.tag = tag;

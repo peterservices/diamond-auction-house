@@ -23,8 +23,8 @@ public class DiamondsAuctionHouse implements ModInitializer {
     }
 
     public static void initServer(MinecraftServer server){
-        ah = new AuctionHouse(AuctionHouseSQLiteDatabaseManager.getItemList());
-        ei = new ExpiredItemList(AuctionHouseSQLiteDatabaseManager.getExpiredItemList());
+        ah = new AuctionHouse(AuctionHouseSQLiteDatabaseManager.getItemList(server));
+        ei = new ExpiredItemList(AuctionHouseSQLiteDatabaseManager.getExpiredItemList(server));
     }
 
     @Override

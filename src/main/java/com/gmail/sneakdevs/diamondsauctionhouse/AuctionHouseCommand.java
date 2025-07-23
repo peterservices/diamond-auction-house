@@ -5,15 +5,19 @@ import com.gmail.sneakdevs.diamondsauctionhouse.auction.AuctionItem;
 import com.gmail.sneakdevs.diamondsauctionhouse.config.DiamondsAuctionHouseConfig;
 import com.gmail.sneakdevs.diamondsauctionhouse.gui.AuctionHouseGui;
 import com.gmail.sneakdevs.diamondsauctionhouse.sql.AuctionHouseDatabaseManager;
+import com.google.gson.JsonElement;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.JsonOps;
+
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerPlayer;
 
 public class AuctionHouseCommand {
@@ -80,8 +84,10 @@ public class AuctionHouseCommand {
             return 0;
         }
         if (DiamondsAuctionHouse.ah.canAddItem()) {
-            CompoundTag tag = new CompoundTag();
-            DiamondsAuctionHouse.ah.addItem(new AuctionItem(DiamondsAuctionHouse.getDatabaseManager().addItemToAuction(playerUuid, player.getName().getString(), tag.toString(), String.valueOf(BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem())), player.getMainHandItem().getCount(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds), playerUuid, player.getName().getString(), player.getMainHandItem(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds));
+            DataComponentMap components = player.getMainHandItem().getComponents();
+            RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, player.getServer().registryAccess());
+            String tag = DataComponentMap.CODEC.encodeStart(registryOps, components).getOrThrow().toString();
+            DiamondsAuctionHouse.ah.addItem(new AuctionItem(player.getServer(), DiamondsAuctionHouse.getDatabaseManager().addItemToAuction(playerUuid, player.getName().getString(), tag, String.valueOf(BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem())), player.getMainHandItem().getCount(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds), playerUuid, player.getName().getString(), player.getMainHandItem(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds));
             player.getInventory().removeItem(player.getMainHandItem());
             ctx.getSource().sendSuccess(() -> Component.literal("Item successfully added to auction house for $" + price), true);
             return 0;

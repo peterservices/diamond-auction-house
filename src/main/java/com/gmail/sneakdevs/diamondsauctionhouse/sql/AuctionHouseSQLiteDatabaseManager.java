@@ -2,6 +2,9 @@ package com.gmail.sneakdevs.diamondsauctionhouse.sql;
 
 import com.gmail.sneakdevs.diamondsauctionhouse.DiamondsAuctionHouse;
 import com.gmail.sneakdevs.diamondsauctionhouse.auction.AuctionItem;
+
+import net.minecraft.server.MinecraftServer;
+
 import com.gmail.sneakdevs.diamondeconomy.sql.SQLiteDatabaseManager;
 
 import java.sql.*;
@@ -18,13 +21,13 @@ public class AuctionHouseSQLiteDatabaseManager implements AuctionHouseDatabaseMa
         return conn;
     }
 
-    public static ArrayList<AuctionItem> getItemList(){
+    public static ArrayList<AuctionItem> getItemList(MinecraftServer server){
         String sql = "SELECT * FROM auctionhouse";
         ArrayList<AuctionItem> list = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(SQLiteDatabaseManager.url); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                list.add(new AuctionItem(rs.getInt("id"), rs.getString("playeruuid"), rs.getString("owner"), rs.getString("tag"), rs.getString("item"), rs.getInt("count"), rs.getInt("price"), rs.getInt("secondsleft")));
+                list.add(new AuctionItem(server, rs.getInt("id"), rs.getString("playeruuid"), rs.getString("owner"), rs.getString("tag"), rs.getString("item"), rs.getInt("count"), rs.getInt("price"), rs.getInt("secondsleft")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -32,13 +35,13 @@ public class AuctionHouseSQLiteDatabaseManager implements AuctionHouseDatabaseMa
         return list;
     }
 
-    public static ArrayList<AuctionItem> getExpiredItemList(){
+    public static ArrayList<AuctionItem> getExpiredItemList(MinecraftServer server){
         String sql = "SELECT * FROM expireditems";
         ArrayList<AuctionItem> list = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(SQLiteDatabaseManager.url); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                list.add(new AuctionItem(rs.getInt("id"), rs.getString("playeruuid"), rs.getString("owner"), rs.getString("tag"), rs.getString("item"), rs.getInt("count"), rs.getInt("price"), 0));
+                list.add(new AuctionItem(server, rs.getInt("id"), rs.getString("playeruuid"), rs.getString("owner"), rs.getString("tag"), rs.getString("item"), rs.getInt("count"), rs.getInt("price"), 0));
             }
         } catch (SQLException e) {
             e.printStackTrace();
