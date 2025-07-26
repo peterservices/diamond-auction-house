@@ -108,7 +108,6 @@ public class AuctionHouseGui extends SimpleGui {
     }
 
     protected DisplayElement getNavElement(int id) {
-        System.out.println(id);
         return switch (id) {
             case 0 -> skull();
             case 3 -> DisplayElement.previousPage(this);
