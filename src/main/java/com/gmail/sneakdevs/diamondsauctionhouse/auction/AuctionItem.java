@@ -5,7 +5,6 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
 
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
@@ -40,10 +39,7 @@ public class AuctionItem {
         itemStack1 = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(item)).get().value(), count);
         RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess());
         DataComponentMap components = DataComponentMap.CODEC.parse(registryOps, JsonParser.parseString(tag)).result().orElse(DataComponentMap.EMPTY);
-        for (DataComponentType<?> type : components.keySet()) {
-            Object value = components.get(type);
-            itemStack1.set((DataComponentType<Object>) type, value);
-        }
+        itemStack1.applyComponents(components);
         this.itemStack = itemStack1;
         this.tag = tag;
         this.uuid = playerUuid;
