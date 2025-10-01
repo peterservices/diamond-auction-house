@@ -105,6 +105,13 @@ public class ExpiredItemsGui extends SimpleGui {
 
     protected DisplayElement getNavElement(int id) {
         return switch (id) {
+            case 0 -> ExpiredItemsGui.DisplayElement.of(
+                    new GuiElementBuilder(Items.RED_CONCRETE)
+                            .setName(Component.literal("Back").withStyle(ChatFormatting.RED))
+                            .setCallback((x, y, z) -> {
+                                playClickSound(this.player);
+                                openPublic();
+                            }));
             case 3 -> DisplayElement.previousPage(this);
             case 4 -> DisplayElement.of(
                     new GuiElementBuilder(Items.BARRIER)
@@ -121,6 +128,14 @@ public class ExpiredItemsGui extends SimpleGui {
 
     protected int getPageAmount() {
         return Math.min(DiamondsAuctionHouseConfig.getInstance().maxPages, expired.size() / PAGE_SIZE + 1);
+    }
+
+    private void openPublic() {
+        this.close();
+        AuctionHouseGui gui = new AuctionHouseGui(player);
+        gui.updateDisplay();
+        gui.setTitle(Component.literal("Auction House"));
+        gui.open();
     }
 
     protected DisplayElement getElement(int id) {
