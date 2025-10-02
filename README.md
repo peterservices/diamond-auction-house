@@ -9,9 +9,10 @@ Permission nodes (change how many chest shops a player can have, based on config
 "diamondschestshop.halfitems"
 "diamondschestshop.noitems"
 
-Github Releases are likely not to work
 
-Downloads:
-https://modrinth.com/mod/diamond-auction-house
+Download:
+- See GitHub Releases for compiled jars from this repository
 
-https://www.curseforge.com/minecraft/mc-mods/diamond-auction-house
+Otherwise, the official downloads are located here:
+-https://www.curseforge.com/minecraft/mc-mods/diamond-auction-house
+-https://modrinth.com/mod/diamond-auction-house
