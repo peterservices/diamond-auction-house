@@ -34,6 +34,7 @@ import eu.pb4.sgui.api.elements.GuiElementBuilderInterface;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -42,6 +43,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 import org.jetbrains.annotations.Nullable;
 
 public class ExpiredItemsGui extends SimpleGui {
@@ -105,13 +107,7 @@ public class ExpiredItemsGui extends SimpleGui {
 
     protected DisplayElement getNavElement(int id) {
         return switch (id) {
-            case 0 -> ExpiredItemsGui.DisplayElement.of(
-                    new GuiElementBuilder(Items.RED_CONCRETE)
-                            .setName(Component.literal("Back").withStyle(ChatFormatting.RED))
-                            .setCallback((x, y, z) -> {
-                                playClickSound(this.player);
-                                openPublic();
-                            }));
+            case 0 -> skull();
             case 3 -> DisplayElement.previousPage(this);
             case 4 -> DisplayElement.of(
                     new GuiElementBuilder(Items.BARRIER)
@@ -122,6 +118,13 @@ public class ExpiredItemsGui extends SimpleGui {
                             })
             );
             case 5 -> DisplayElement.nextPage(this);
+            case 8 -> ExpiredItemsGui.DisplayElement.of(
+                    new GuiElementBuilder(Items.RED_CONCRETE)
+                            .setName(Component.literal("Back").withStyle(ChatFormatting.RED))
+                            .setCallback((x, y, z) -> {
+                                playClickSound(this.player);
+                                openPublic();
+                            }));
             default -> DisplayElement.filler();
         };
     }
@@ -171,6 +174,27 @@ public class ExpiredItemsGui extends SimpleGui {
         }
 
         super.onTick();
+    }
+
+    private void openPersonal() {
+        this.close();
+        PersonalAuctionHouseGui gui = new PersonalAuctionHouseGui(player);
+        gui.updateDisplay();
+        gui.setTitle(Component.literal("My Items"));
+        gui.open();
+    }
+
+    private DisplayElement skull() {
+        ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
+        stack.set(DataComponents.PROFILE, new ResolvableProfile(player.getGameProfile()));
+
+        return DisplayElement.of(GuiElementBuilder.from(stack)
+                .setName(Component.literal("My Items").withStyle(ChatFormatting.BLUE))
+                .setCallback((x, y, z) -> {
+                    playClickSound(this.player);
+                    openPersonal();
+                }));
+
     }
 
     public static void playClickSound(ServerPlayer player) {
