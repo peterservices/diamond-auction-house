@@ -197,7 +197,7 @@ public class ExpiredItemsGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.next_page").withStyle(ChatFormatting.WHITE))
-                                .setProfileSkinTexture(GuiTextures.GUI_NEXT_PAGE)
+                                .setSkullOwner(GuiTextures.GUI_NEXT_PAGE)
                                 .setCallback((x, y, z) -> {
                                     playClickSound(gui.player);
                                     gui.nextPage();
@@ -206,7 +206,7 @@ public class ExpiredItemsGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.next_page").withStyle(ChatFormatting.DARK_GRAY))
-                                .setProfileSkinTexture(GuiTextures.GUI_NEXT_PAGE_BLOCKED));
+                                .setSkullOwner(GuiTextures.GUI_NEXT_PAGE_BLOCKED));
             }
         }
 
@@ -215,7 +215,7 @@ public class ExpiredItemsGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.previous_page").withStyle(ChatFormatting.WHITE))
-                                .setProfileSkinTexture(GuiTextures.GUI_PREVIOUS_PAGE)
+                                .setSkullOwner(GuiTextures.GUI_PREVIOUS_PAGE)
                                 .setCallback((x, y, z) -> {
                                     playClickSound(gui.player);
                                     gui.previousPage();
@@ -224,7 +224,7 @@ public class ExpiredItemsGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.previous_page").withStyle(ChatFormatting.DARK_GRAY))
-                                .setProfileSkinTexture(GuiTextures.GUI_PREVIOUS_PAGE_BLOCKED));
+                                .setSkullOwner(GuiTextures.GUI_PREVIOUS_PAGE_BLOCKED));
             }
         }
 
