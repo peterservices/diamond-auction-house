@@ -35,7 +35,7 @@ public class AuctionItemGui extends SimpleGui {
     public AuctionItemGui(ServerPlayer player, AuctionItem item) {
         super(MenuType.GENERIC_9x1, player, false);
         this.item = item;
-        this.server = player.getServer();
+        this.server = player.level().getServer();
     }
 
     public void updateDisplay() {
@@ -128,7 +128,7 @@ public class AuctionItemGui extends SimpleGui {
 
     private DisplayElement skull() {
         ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
-        stack.set(DataComponents.PROFILE, new ResolvableProfile(server.getProfileCache().get(UUID.fromString(item.getUuid())).orElse(new GameProfile(UUID.fromString(item.getUuid()), item.getOwner()))));
+        stack.set(DataComponents.PROFILE, ResolvableProfile.createResolved(server.services().profileResolver().fetchById(UUID.fromString(item.getUuid())).orElse(new GameProfile(UUID.fromString(item.getUuid()), item.getOwner()))));
         return DisplayElement.of(GuiElementBuilder.from(stack)
                 .setName(Component.literal("Owner: " + item.getOwner()).withStyle(ChatFormatting.BLUE)));
     }

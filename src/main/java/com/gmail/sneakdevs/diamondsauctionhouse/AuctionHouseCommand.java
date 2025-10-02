@@ -85,9 +85,9 @@ public class AuctionHouseCommand {
         }
         if (DiamondsAuctionHouse.ah.canAddItem()) {
             DataComponentMap components = player.getMainHandItem().getComponents();
-            RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, player.getServer().registryAccess());
+            RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, player.level().getServer().registryAccess());
             String tag = DataComponentMap.CODEC.encodeStart(registryOps, components).getOrThrow().toString();
-            DiamondsAuctionHouse.ah.addItem(new AuctionItem(player.getServer(), DiamondsAuctionHouse.getDatabaseManager().addItemToAuction(playerUuid, player.getName().getString(), tag, String.valueOf(BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem())), player.getMainHandItem().getCount(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds), playerUuid, player.getName().getString(), player.getMainHandItem(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds));
+            DiamondsAuctionHouse.ah.addItem(new AuctionItem(player.level().getServer(), DiamondsAuctionHouse.getDatabaseManager().addItemToAuction(playerUuid, player.getName().getString(), tag, String.valueOf(BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem())), player.getMainHandItem().getCount(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds), playerUuid, player.getName().getString(), player.getMainHandItem(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds));
             player.getInventory().removeItem(player.getMainHandItem());
             ctx.getSource().sendSuccess(() -> Component.literal("Item successfully added to auction house for $" + price), true);
             return 0;

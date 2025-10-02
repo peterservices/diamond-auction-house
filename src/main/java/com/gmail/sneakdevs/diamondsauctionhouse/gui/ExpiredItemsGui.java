@@ -186,7 +186,7 @@ public class ExpiredItemsGui extends SimpleGui {
 
     private DisplayElement skull() {
         ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
-        stack.set(DataComponents.PROFILE, new ResolvableProfile(player.getGameProfile()));
+        stack.set(DataComponents.PROFILE, ResolvableProfile.createResolved(player.getGameProfile()));
 
         return DisplayElement.of(GuiElementBuilder.from(stack)
                 .setName(Component.literal("My Items").withStyle(ChatFormatting.BLUE))
@@ -221,7 +221,7 @@ public class ExpiredItemsGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.next_page").withStyle(ChatFormatting.WHITE))
-                                .setSkullOwner(GuiTextures.GUI_NEXT_PAGE)
+                                .setProfileSkinTexture(GuiTextures.GUI_NEXT_PAGE)
                                 .setCallback((x, y, z) -> {
                                     playClickSound(gui.player);
                                     gui.nextPage();
@@ -230,7 +230,7 @@ public class ExpiredItemsGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.next_page").withStyle(ChatFormatting.DARK_GRAY))
-                                .setSkullOwner(GuiTextures.GUI_NEXT_PAGE_BLOCKED));
+                                .setProfileSkinTexture(GuiTextures.GUI_NEXT_PAGE_BLOCKED));
             }
         }
 
@@ -239,7 +239,7 @@ public class ExpiredItemsGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.previous_page").withStyle(ChatFormatting.WHITE))
-                                .setSkullOwner(GuiTextures.GUI_PREVIOUS_PAGE)
+                                .setProfileSkinTexture(GuiTextures.GUI_PREVIOUS_PAGE)
                                 .setCallback((x, y, z) -> {
                                     playClickSound(gui.player);
                                     gui.previousPage();
@@ -248,7 +248,7 @@ public class ExpiredItemsGui extends SimpleGui {
                 return DisplayElement.of(
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.previous_page").withStyle(ChatFormatting.DARK_GRAY))
-                                .setSkullOwner(GuiTextures.GUI_PREVIOUS_PAGE_BLOCKED));
+                                .setProfileSkinTexture(GuiTextures.GUI_PREVIOUS_PAGE_BLOCKED));
             }
         }
 
