@@ -14,5 +14,5 @@ Download:
 - See GitHub Releases for compiled jars from this repository
 
 Otherwise, the official downloads are located here:
--https://www.curseforge.com/minecraft/mc-mods/diamond-auction-house
--https://modrinth.com/mod/diamond-auction-house
+- https://www.curseforge.com/minecraft/mc-mods/diamond-auction-house
+- https://modrinth.com/mod/diamond-auction-house
