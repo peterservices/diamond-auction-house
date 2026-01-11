@@ -13,8 +13,11 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.MenuType;
@@ -93,7 +96,7 @@ public class AuctionItemGui extends SimpleGui {
     }
 
     public static void playClickSound(ServerPlayer player) {
-        player.playNotifySound(SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.MASTER, 1, 1);
+        player.connection.send(new ClientboundSoundPacket(SoundEvents.UI_BUTTON_CLICK, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 1, 1, player.getRandom().nextLong()));
     }
 
     private DisplayElement confirm() {
@@ -113,7 +116,7 @@ public class AuctionItemGui extends SimpleGui {
     }
 
     private DisplayElement trash() {
-        if (player.hasPermissions(4) || player.getStringUUID().equals(item.getUuid())) {
+        if (player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.byId(4))) || player.getStringUUID().equals(item.getUuid())) {
             return DisplayElement.of(
                     new GuiElementBuilder(Items.HOPPER)
                             .setName(Component.literal("Remove from Auction").withStyle(ChatFormatting.RED))
