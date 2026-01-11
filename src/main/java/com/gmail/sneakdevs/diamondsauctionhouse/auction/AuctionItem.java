@@ -7,7 +7,7 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
 
@@ -36,7 +36,7 @@ public class AuctionItem {
     public AuctionItem(MinecraftServer server, int id, String playerUuid, String owner, String tag, String item, int count, int price, int secondsLeft) {
         ItemStack itemStack1;
         this.id = id;
-        itemStack1 = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(item)).get().value(), count);
+        itemStack1 = new ItemStack(BuiltInRegistries.ITEM.get(Identifier.tryParse(item)).get().value(), count);
         RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess());
         DataComponentMap components = DataComponentMap.CODEC.parse(registryOps, JsonParser.parseString(tag)).result().orElse(DataComponentMap.EMPTY);
         itemStack1.applyComponents(components);
