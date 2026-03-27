@@ -30,8 +30,8 @@ import com.gmail.sneakdevs.diamondsauctionhouse.config.DiamondsAuctionHouseConfi
 
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementBuilderInterface;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
+import eu.pb4.sgui.api.elements.GuiElementBuilderCreator;
+import eu.pb4.sgui.api.elements.SimpleGuiElement;
 import eu.pb4.sgui.api.gui.SimpleGui;
 
 import net.minecraft.ChatFormatting;
@@ -88,7 +88,7 @@ public class AuctionHouseGui extends SimpleGui {
             if (element.element() != null) {
                 this.setSlot(i, element.element());
             } else if (element.slot() != null) {
-                this.setSlotRedirect(i, element.slot());
+                this.setSlot(i, element.slot());
             }
         }
 
@@ -103,7 +103,7 @@ public class AuctionHouseGui extends SimpleGui {
             if (navElement.element != null) {
                 this.setSlot(i + PAGE_SIZE, navElement.element);
             } else if (navElement.slot != null) {
-                this.setSlotRedirect(i + PAGE_SIZE, navElement.slot);
+                this.setSlot(i + PAGE_SIZE, navElement.slot);
             }
         }
     }
@@ -115,7 +115,7 @@ public class AuctionHouseGui extends SimpleGui {
             case 4 -> DisplayElement.of(
                     new GuiElementBuilder(Items.BARRIER)
                             .setName(Component.translatable("spectatorMenu.close").withStyle(ChatFormatting.RED))
-                            .setCallback((x, y, z) -> {
+                            .setCallback(() -> {
                                 playClickSound(this.player);
                                 this.close();
                             })
@@ -124,7 +124,7 @@ public class AuctionHouseGui extends SimpleGui {
             case 8 -> DisplayElement.of(
                     new GuiElementBuilder(Items.HOPPER)
                             .setName(Component.literal("Expired Items").withStyle(ChatFormatting.RED))
-                            .setCallback((x, y, z) -> {
+                            .setCallback(() -> {
                                 playClickSound(this.player);
                                 this.openExpiredGui();
                             })
@@ -148,7 +148,7 @@ public class AuctionHouseGui extends SimpleGui {
                 GuiElementBuilder.from(ai.getItemStack())
                         .addLoreLine(Component.literal(ai.getTimeLeft()).withStyle(ChatFormatting.DARK_PURPLE))
                         .addLoreLine(Component.literal("$" + ai.getPrice()).withStyle(ChatFormatting.DARK_PURPLE))
-                        .setCallback((x, y, z) -> {
+                        .setCallback(() -> {
                             playClickSound(this.player);
                             openItemGui(DiamondsAuctionHouse.ah.getItem(id1));
                         }));
@@ -195,7 +195,7 @@ public class AuctionHouseGui extends SimpleGui {
         
         return DisplayElement.of(GuiElementBuilder.from(stack)
                 .setName(Component.literal("My Items").withStyle(ChatFormatting.BLUE))
-                .setCallback((x, y, z) -> {
+                .setCallback(() -> {
                     playClickSound(this.player);
                     openPersonal();
                 }));
@@ -206,18 +206,18 @@ public class AuctionHouseGui extends SimpleGui {
         player.connection.send(new ClientboundSoundPacket(SoundEvents.UI_BUTTON_CLICK, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 1, 1, player.getRandom().nextLong()));
     }
 
-    public record DisplayElement(@Nullable GuiElementInterface element, @Nullable Slot slot) {
-        private static final DisplayElement EMPTY = DisplayElement.of(new GuiElement(ItemStack.EMPTY, GuiElementInterface.EMPTY_CALLBACK));
+    public record DisplayElement(@Nullable GuiElement element, @Nullable Slot slot) {
+        private static final DisplayElement EMPTY = DisplayElement.of(new SimpleGuiElement(ItemStack.EMPTY, GuiElement.EMPTY_CALLBACK));
         private static final DisplayElement FILLER = DisplayElement.of(
                 new GuiElementBuilder(Items.LIGHT_GRAY_STAINED_GLASS_PANE)
                         .setName(Component.literal(""))
         );
 
-        public static DisplayElement of(GuiElementInterface element) {
+        public static DisplayElement of(GuiElement element) {
             return new DisplayElement(element, null);
         }
 
-        public static DisplayElement of(GuiElementBuilderInterface<?> element) {
+        public static DisplayElement of(GuiElementBuilderCreator<?> element) {
             return new DisplayElement(element.build(), null);
         }
 
@@ -227,7 +227,7 @@ public class AuctionHouseGui extends SimpleGui {
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.next_page").withStyle(ChatFormatting.WHITE))
                                 .setProfileSkinTexture(GuiTextures.GUI_NEXT_PAGE)
-                                .setCallback((x, y, z) -> {
+                                .setCallback(() -> {
                                     playClickSound(gui.player);
                                     gui.nextPage();
                                 }));
@@ -245,7 +245,7 @@ public class AuctionHouseGui extends SimpleGui {
                         new GuiElementBuilder(Items.PLAYER_HEAD)
                                 .setName(Component.translatable("spectatorMenu.previous_page").withStyle(ChatFormatting.WHITE))
                                 .setProfileSkinTexture(GuiTextures.GUI_PREVIOUS_PAGE)
-                                .setCallback((x, y, z) -> {
+                                .setCallback(() -> {
                                     playClickSound(gui.player);
                                     gui.previousPage();
                                 }));

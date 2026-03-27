@@ -27,7 +27,7 @@ public class DiamondsAuctionHouseConfig implements ConfigData {
         return AutoConfig.getConfigHolder(DiamondsAuctionHouseConfig.class).getConfig();
     }
 
-    public static int getPlayerMaxItems(ServerPlayer player){
+    public static int getPlayerMaxItems(ServerPlayer player) {
         if (Permissions.check(player, DiamondsAuctionHouse.MODID + ".infiniteitems")) {
             return -1;
         }

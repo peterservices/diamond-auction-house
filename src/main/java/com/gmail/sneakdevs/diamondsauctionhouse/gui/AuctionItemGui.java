@@ -7,8 +7,8 @@ import com.mojang.authlib.GameProfile;
 
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementBuilderInterface;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
+import eu.pb4.sgui.api.elements.GuiElementBuilderCreator;
+import eu.pb4.sgui.api.elements.SimpleGuiElement;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -52,7 +52,7 @@ public class AuctionItemGui extends SimpleGui {
             if (navElement.element != null) {
                 this.setSlot(i, navElement.element);
             } else if (navElement.slot != null) {
-                this.setSlotRedirect(i, navElement.slot);
+                this.setSlot(i, navElement.slot);
             }
         }
     }
@@ -73,7 +73,7 @@ public class AuctionItemGui extends SimpleGui {
             case 7 -> DisplayElement.of(
                     new GuiElementBuilder(Items.RED_STAINED_GLASS_PANE)
                             .setName(Component.literal("Cancel").withStyle(ChatFormatting.RED))
-                            .setCallback((x, y, z) -> {
+                            .setCallback(() -> {
                                 playClickSound(this.player);
                                 this.close();
                             })
@@ -104,7 +104,7 @@ public class AuctionItemGui extends SimpleGui {
             return DisplayElement.of(
                     new GuiElementBuilder(Items.GREEN_STAINED_GLASS_PANE)
                             .setName(Component.literal("Confirm").withStyle(ChatFormatting.GREEN))
-                            .setCallback((x, y, z) -> {
+                            .setCallback(() -> {
                                 playClickSound(this.player);
                                 this.buy();
                             }));
@@ -120,7 +120,7 @@ public class AuctionItemGui extends SimpleGui {
             return DisplayElement.of(
                     new GuiElementBuilder(Items.HOPPER)
                             .setName(Component.literal("Remove from Auction").withStyle(ChatFormatting.RED))
-                            .setCallback((x, y, z) -> {
+                            .setCallback(() -> {
                                 playClickSound(this.player);
                                 this.remove();
                             }));
@@ -161,23 +161,23 @@ public class AuctionItemGui extends SimpleGui {
                 }
             }
         } else {
-            player.displayClientMessage(Component.literal("That item was already bought"), true);
+            player.sendSystemMessage(Component.literal("That item was already bought"), true);
         }
         super.close();
     }
 
-    public record DisplayElement(@Nullable GuiElementInterface element, @Nullable Slot slot) {
-        private static final DisplayElement EMPTY = DisplayElement.of(new GuiElement(ItemStack.EMPTY, GuiElementInterface.EMPTY_CALLBACK));
+    public record DisplayElement(@Nullable GuiElement element, @Nullable Slot slot) {
+        private static final DisplayElement EMPTY = DisplayElement.of(new SimpleGuiElement(ItemStack.EMPTY, GuiElement.EMPTY_CALLBACK));
         private static final DisplayElement FILLER = DisplayElement.of(
                 new GuiElementBuilder(Items.LIGHT_GRAY_STAINED_GLASS_PANE)
                         .setName(Component.literal(""))
         );
 
-        public static DisplayElement of(GuiElementInterface element) {
+        public static DisplayElement of(GuiElement element) {
             return new DisplayElement(element, null);
         }
 
-        public static DisplayElement of(GuiElementBuilderInterface<?> element) {
+        public static DisplayElement of(GuiElementBuilderCreator<?> element) {
             return new DisplayElement(element.build(), null);
         }
 
