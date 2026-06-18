@@ -71,7 +71,7 @@ public class AuctionItemGui extends SimpleGui {
             case 4 -> DisplayElement.of(GuiElementBuilder.from(item.getItemStack()));
             case 6 -> confirm();
             case 7 -> DisplayElement.of(
-                    new GuiElementBuilder(Items.RED_STAINED_GLASS_PANE)
+                    new GuiElementBuilder(Items.STAINED_GLASS_PANE.red())
                             .setName(Component.literal("Cancel").withStyle(ChatFormatting.RED))
                             .setCallback(() -> {
                                 playClickSound(this.player);
@@ -102,7 +102,7 @@ public class AuctionItemGui extends SimpleGui {
     private DisplayElement confirm() {
         if (item.getPrice() < DiamondUtils.getDatabaseManager().getBalanceFromUUID(player.getStringUUID())) {
             return DisplayElement.of(
-                    new GuiElementBuilder(Items.GREEN_STAINED_GLASS_PANE)
+                    new GuiElementBuilder(Items.STAINED_GLASS_PANE.green())
                             .setName(Component.literal("Confirm").withStyle(ChatFormatting.GREEN))
                             .setCallback(() -> {
                                 playClickSound(this.player);
@@ -110,7 +110,7 @@ public class AuctionItemGui extends SimpleGui {
                             }));
         } else {
             return DisplayElement.of(
-                    new GuiElementBuilder(Items.GRAY_STAINED_GLASS_PANE)
+                    new GuiElementBuilder(Items.STAINED_GLASS_PANE.gray())
                             .setName(Component.literal("Confirm").withStyle(ChatFormatting.DARK_GRAY)));
         }
     }
@@ -169,7 +169,7 @@ public class AuctionItemGui extends SimpleGui {
     public record DisplayElement(@Nullable GuiElement element, @Nullable Slot slot) {
         private static final DisplayElement EMPTY = DisplayElement.of(new SimpleGuiElement(ItemStack.EMPTY, GuiElement.EMPTY_CALLBACK));
         private static final DisplayElement FILLER = DisplayElement.of(
-                new GuiElementBuilder(Items.LIGHT_GRAY_STAINED_GLASS_PANE)
+                new GuiElementBuilder(Items.STAINED_GLASS_PANE.lightGray())
                         .setName(Component.literal(""))
         );
 

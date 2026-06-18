@@ -120,7 +120,7 @@ public class ExpiredItemsGui extends SimpleGui {
             );
             case 5 -> DisplayElement.nextPage(this);
             case 8 -> ExpiredItemsGui.DisplayElement.of(
-                    new GuiElementBuilder(Items.RED_CONCRETE)
+                    new GuiElementBuilder(Items.CONCRETE.red())
                             .setName(Component.literal("Back").withStyle(ChatFormatting.RED))
                             .setCallback(() -> {
                                 playClickSound(this.player);
@@ -205,7 +205,7 @@ public class ExpiredItemsGui extends SimpleGui {
     public record DisplayElement(@Nullable GuiElement element, @Nullable Slot slot) {
         private static final DisplayElement EMPTY = DisplayElement.of(new SimpleGuiElement(ItemStack.EMPTY, GuiElement.EMPTY_CALLBACK));
         private static final DisplayElement FILLER = DisplayElement.of(
-                new GuiElementBuilder(Items.LIGHT_GRAY_STAINED_GLASS_PANE)
+                new GuiElementBuilder(Items.STAINED_GLASS_PANE.lightGray())
                         .setName(Component.literal(""))
         );
 
