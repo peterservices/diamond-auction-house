@@ -89,13 +89,13 @@ public class AuctionItem {
         int minutes = seconds / 60;
         seconds -= minutes * 60;
         if (days > 0) {
-            return String.format("%02d:%02d:%02d" + "m", days, hours, minutes);
+            return String.format("%02dd %02dh %02dm", days, hours, minutes);
         } else {
             if (hours > 0) {
-                return String.format("%02d:%02d:%02d" + "s", hours, minutes, seconds);
+                return String.format("%02dh %02dm %02ds", hours, minutes, seconds);
             }
         }
-        return (minutes > 0) ? String.format("%02d:%02d" + "s", minutes, seconds) : (seconds + "s");
+        return (minutes > 0) ? String.format("%02dm %02ds", minutes, seconds) : (seconds + "s");
     }
 
     public boolean tickDeath() {
