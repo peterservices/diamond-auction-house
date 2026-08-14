@@ -1,12 +1,13 @@
 package com.gmail.sneakdevs.diamondsauctionhouse.config;
 
 import com.gmail.sneakdevs.diamondsauctionhouse.DiamondsAuctionHouse;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.fabricmc.fabric.api.permission.v1.PermissionContext;
 
 @Config(name = DiamondsAuctionHouse.MODID)
 public class DiamondsAuctionHouseConfig implements ConfigData {
@@ -28,26 +29,27 @@ public class DiamondsAuctionHouseConfig implements ConfigData {
     }
 
     public static int getPlayerMaxItems(ServerPlayer player) {
-        if (Permissions.check(player, DiamondsAuctionHouse.MODID + ".infiniteitems")) {
+        PermissionContext context = player.getPermissionContext();
+        if (context.checkPermission(Identifier.parse(DiamondsAuctionHouse.MODID + ":infiniteitems")).get()) {
             return -1;
         }
-        if (Permissions.check(player, DiamondsAuctionHouse.MODID + ".noitems")) {
+        if (context.checkPermission(Identifier.parse(DiamondsAuctionHouse.MODID + ":noitems")).get()) {
             return 0;
         }
         int items = getInstance().maxPlayerItems;
-        if (Permissions.check(player, DiamondsAuctionHouse.MODID + ".quintupleitems")) {
+        if (context.checkPermission(Identifier.parse(DiamondsAuctionHouse.MODID + ":quintupleitems")).get()) {
             return items * 5;
         }
-        if (Permissions.check(player, DiamondsAuctionHouse.MODID + ".quadrupleitems")) {
+        if (context.checkPermission(Identifier.parse(DiamondsAuctionHouse.MODID + ":quadrupleitems")).get()) {
             return items * 4;
         }
-        if (Permissions.check(player, DiamondsAuctionHouse.MODID + ".tripleitems")) {
+        if (context.checkPermission(Identifier.parse(DiamondsAuctionHouse.MODID + ":tripleitems")).get()) {
             return items * 3;
         }
-        if (Permissions.check(player, DiamondsAuctionHouse.MODID + ".doubleitems")) {
+        if (context.checkPermission(Identifier.parse(DiamondsAuctionHouse.MODID + ":doubleitems")).get()) {
             return items * 2;
         }
-        if (Permissions.check(player, DiamondsAuctionHouse.MODID + ".halfitems")) {
+        if (context.checkPermission(Identifier.parse(DiamondsAuctionHouse.MODID + ":halfitems")).get()) {
             return items / 2;
         }
         return items;

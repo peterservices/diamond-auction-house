@@ -30,7 +30,6 @@ dependencies {
     }
     api ("com.github.peterservices:diamond-economy:${rootProject.diamond_economy_hash}")
     implementation include("eu.pb4:sgui:${rootProject.sgui_version}")
-    implementation include("me.lucko:fabric-permissions-api:${rootProject.permissions_api_version}")
 }
 
 processResources {
