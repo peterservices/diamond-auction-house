@@ -20,6 +20,7 @@ import net.minecraft.server.permissions.Permission;
 import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -157,7 +158,11 @@ public class AuctionItemGui extends SimpleGui {
                     DiamondUtils.getDatabaseManager().changeBalance(player.getStringUUID(), -item.getPrice());
                     DiamondsAuctionHouse.getDatabaseManager().removeItemFromAuction(item);
                     DiamondsAuctionHouse.ah.removeItem(item);
-                    player.getInventory().add(item.getItemStack());
+                    if (!player.getInventory().add(item.getItemStack())) { // Add items to inventory and drop excess
+                        ItemEntity itemEntity = player.drop(item.getItemStack(), false);
+                        assert itemEntity != null;
+                        itemEntity.setNoPickUpDelay();
+                    }
                 }
             }
         } else {

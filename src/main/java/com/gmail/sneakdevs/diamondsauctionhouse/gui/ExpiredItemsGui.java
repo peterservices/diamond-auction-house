@@ -40,6 +40,7 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -160,7 +161,11 @@ public class ExpiredItemsGui extends SimpleGui {
             DiamondsAuctionHouse.getDatabaseManager().removeItemFromExpired(item);
             DiamondsAuctionHouse.ei.removeItem(item);
             expired.removeItem(item);
-            player.getInventory().add(item.getItemStack());
+            if (!player.getInventory().add(item.getItemStack())) { // Add items to inventory and drop excess
+                ItemEntity itemEntity = player.drop(item.getItemStack(), false);
+                assert itemEntity != null;
+                itemEntity.setNoPickUpDelay();
+            }
             updateDisplay();
         }
     }
