@@ -74,13 +74,13 @@ public class AuctionHouseCommand {
     private static int auctionCommand(CommandContext<CommandSourceStack> ctx, int price) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         if (player.getMainHandItem().isEmpty()) {
-            ctx.getSource().sendSuccess(() -> Component.literal("You must be holding an item"), true);
+            ctx.getSource().sendFailure(Component.literal("You must be holding an item"));
             return 0;
         }
         AuctionHouseDatabaseManager dm = DiamondsAuctionHouse.getDatabaseManager();
         String playerUuid = player.getStringUUID();
         if ((dm.playerItemCount(playerUuid, "auctionhouse") + dm.playerItemCount(playerUuid, "expireditems")) >= DiamondsAuctionHouseConfig.getPlayerMaxItems(player)) {
-            ctx.getSource().sendSuccess(() -> Component.literal("You have too many items on auction"), true);
+            ctx.getSource().sendFailure(Component.literal("You have too many items on auction"));
             return 0;
         }
         if (DiamondsAuctionHouse.ah.canAddItem()) {
@@ -92,7 +92,7 @@ public class AuctionHouseCommand {
             ctx.getSource().sendSuccess(() -> Component.literal("Item successfully added to auction house for $" + price), true);
             return 0;
         }
-        ctx.getSource().sendSuccess(() -> Component.literal("The auction house is full"), true);
+        ctx.getSource().sendFailure(Component.literal("The auction house is full"));
         return 0;
     }
 }
