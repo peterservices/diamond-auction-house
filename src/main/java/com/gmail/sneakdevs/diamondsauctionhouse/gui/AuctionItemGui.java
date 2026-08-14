@@ -1,6 +1,7 @@
 package com.gmail.sneakdevs.diamondsauctionhouse.gui;
 
 import com.gmail.sneakdevs.diamondeconomy.DiamondUtils;
+import com.gmail.sneakdevs.diamondeconomy.config.DiamondEconomyConfig;
 import com.gmail.sneakdevs.diamondsauctionhouse.DiamondsAuctionHouse;
 import com.gmail.sneakdevs.diamondsauctionhouse.auction.AuctionItem;
 import com.mojang.authlib.GameProfile;
@@ -66,7 +67,7 @@ public class AuctionItemGui extends SimpleGui {
             );
             case 1 -> DisplayElement.of(
                     new GuiElementBuilder(Items.PAPER)
-                            .setName(Component.literal("Price: $" + item.getPrice()).withStyle(ChatFormatting.BLUE))
+                            .setName(Component.literal("Price: " + DiamondEconomyConfig.formatCurrency(item.getPrice())).withStyle(ChatFormatting.BLUE))
             );
             case 2 -> skull();
             case 4 -> DisplayElement.of(GuiElementBuilder.from(item.getItemStack()));

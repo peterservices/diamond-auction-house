@@ -24,6 +24,7 @@ SOFTWARE.
 
 package com.gmail.sneakdevs.diamondsauctionhouse.gui;
 
+import com.gmail.sneakdevs.diamondeconomy.config.DiamondEconomyConfig;
 import com.gmail.sneakdevs.diamondsauctionhouse.DiamondsAuctionHouse;
 import com.gmail.sneakdevs.diamondsauctionhouse.auction.AuctionHouse;
 import com.gmail.sneakdevs.diamondsauctionhouse.auction.AuctionItem;
@@ -157,7 +158,7 @@ public class PersonalAuctionHouseGui extends SimpleGui {
         return DisplayElement.of(
                 GuiElementBuilder.from(ai.getItemStack())
                         .addLoreLine(Component.literal(ai.getTimeLeft()).withStyle(ChatFormatting.DARK_PURPLE))
-                        .addLoreLine(Component.literal("$" + ai.getPrice()).withStyle(ChatFormatting.DARK_PURPLE))
+                        .addLoreLine(Component.literal(DiamondEconomyConfig.formatCurrency(ai.getPrice())).withStyle(ChatFormatting.DARK_PURPLE))
                         .setCallback(() -> {
                             playClickSound(this.player);
                             openItemGui(ah.getItem(id1));
