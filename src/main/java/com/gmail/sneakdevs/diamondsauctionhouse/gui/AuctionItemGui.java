@@ -159,6 +159,14 @@ public class AuctionItemGui extends SimpleGui {
                     DiamondUtils.getDatabaseManager().changeBalance(player.getStringUUID(), -item.getPrice());
                     DiamondsAuctionHouse.getDatabaseManager().removeItemFromAuction(item);
                     DiamondsAuctionHouse.ah.removeItem(item);
+
+                    Component itemDisplayName = item.getItemStack().getDisplayName();
+                    Player otherPlayer = player.level().getPlayerByUUID(UUID.fromString(item.getUuid()));
+                    if (otherPlayer != null) {
+                        otherPlayer.sendSystemMessage(Component.literal(player.getName().getString() + " bought your ").append(itemDisplayName).append(" for " + DiamondEconomyConfig.formatCurrency(item.getPrice())));
+                    }
+                    player.createCommandSourceStack().sendSuccess(() -> Component.empty().append(itemDisplayName).append(" successfully bought from auction house for " + DiamondEconomyConfig.formatCurrency(item.getPrice())), true);
+
                     if (!player.getInventory().add(item.getItemStack())) { // Add items to inventory and drop excess
                         ItemEntity itemEntity = player.drop(item.getItemStack(), false);
                         assert itemEntity != null;

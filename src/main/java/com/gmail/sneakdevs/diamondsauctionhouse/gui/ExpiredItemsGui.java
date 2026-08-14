@@ -161,6 +161,9 @@ public class ExpiredItemsGui extends SimpleGui {
             DiamondsAuctionHouse.getDatabaseManager().removeItemFromExpired(item);
             DiamondsAuctionHouse.ei.removeItem(item);
             expired.removeItem(item);
+
+            player.createCommandSourceStack().sendSuccess(() -> Component.empty().append(item.getItemStack().getDisplayName()).append(" successfully removed from auction house"), true);
+
             if (!player.getInventory().add(item.getItemStack())) { // Add items to inventory and drop excess
                 ItemEntity itemEntity = player.drop(item.getItemStack(), false);
                 assert itemEntity != null;

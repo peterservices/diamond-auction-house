@@ -88,8 +88,8 @@ public class AuctionHouseCommand {
             RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, player.level().getServer().registryAccess());
             String tag = DataComponentMap.CODEC.encodeStart(registryOps, components).getOrThrow().toString();
             DiamondsAuctionHouse.ah.addItem(new AuctionItem(player.level().getServer(), DiamondsAuctionHouse.getDatabaseManager().addItemToAuction(playerUuid, player.getName().getString(), tag, String.valueOf(BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem())), player.getMainHandItem().getCount(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds), playerUuid, player.getName().getString(), player.getMainHandItem(), price, DiamondsAuctionHouseConfig.getInstance().auctionSeconds));
+            ctx.getSource().sendSuccess(() -> Component.empty().append(player.getMainHandItem().getDisplayName()).append(Component.literal(" successfully added to auction house for " + DiamondEconomyConfig.formatCurrency(price))), true);
             player.getInventory().removeItem(player.getMainHandItem());
-            ctx.getSource().sendSuccess(() -> Component.literal("Item successfully added to auction house for $" + price), true);
             return 0;
         }
         ctx.getSource().sendFailure(Component.literal("The auction house is full"));
