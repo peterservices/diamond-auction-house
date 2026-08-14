@@ -22,6 +22,7 @@ import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -44,6 +45,10 @@ public class AuctionItemGui extends SimpleGui {
     }
 
     public void updateDisplay() {
+        if (!DiamondsAuctionHouse.getDatabaseManager().isItemForAuction(item.getId())) {
+            close();
+            return;
+        }
         for (int i = 0; i < 9; i++) {
             var navElement = this.getNavElement(i);
 
