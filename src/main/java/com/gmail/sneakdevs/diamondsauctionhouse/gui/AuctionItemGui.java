@@ -107,7 +107,7 @@ public class AuctionItemGui extends SimpleGui {
     }
 
     private DisplayElement confirm() {
-        if (item.getPrice() < DiamondUtils.getDatabaseManager().getBalanceFromUUID(player.getStringUUID())) {
+        if (item.getPrice() <= DiamondUtils.getDatabaseManager().getBalanceFromUUID(player.getStringUUID())) {
             return DisplayElement.of(
                     new GuiElementBuilder(Items.STAINED_GLASS_PANE.green())
                             .setName(Component.literal("Confirm").withStyle(ChatFormatting.GREEN))
