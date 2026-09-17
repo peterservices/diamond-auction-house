@@ -40,6 +40,7 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
@@ -165,7 +166,7 @@ public class ExpiredItemsGui extends SimpleGui {
             player.createCommandSourceStack().sendSuccess(() -> Component.empty().append(item.getItemStack().getDisplayName()).append(" successfully removed from auction house"), true);
 
             if (!player.getInventory().add(item.getItemStack())) { // Add items to inventory and drop excess
-                ItemEntity itemEntity = player.drop(item.getItemStack(), false);
+                ItemEntity itemEntity = player.drop(item.getItemStack(), false, Prediction.SERVER_ONLY);
                 assert itemEntity != null;
                 itemEntity.setNoPickUpDelay();
             }

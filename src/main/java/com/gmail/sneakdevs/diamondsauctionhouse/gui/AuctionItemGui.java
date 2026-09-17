@@ -21,6 +21,7 @@ import net.minecraft.server.permissions.Permission;
 import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -173,7 +174,7 @@ public class AuctionItemGui extends SimpleGui {
                     player.createCommandSourceStack().sendSuccess(() -> Component.empty().append(itemDisplayName).append(" successfully bought from auction house for " + DiamondEconomyConfig.formatCurrency(item.getPrice())), true);
 
                     if (!player.getInventory().add(item.getItemStack())) { // Add items to inventory and drop excess
-                        ItemEntity itemEntity = player.drop(item.getItemStack(), false);
+                        ItemEntity itemEntity = player.drop(item.getItemStack(), false, Prediction.SERVER_ONLY);
                         assert itemEntity != null;
                         itemEntity.setNoPickUpDelay();
                     }
